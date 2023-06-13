@@ -1,0 +1,46 @@
+const readline = require("readline");
+let itog = [];
+let possible;
+let caseno = 1;
+
+function factorial(n, fac, val) {
+  let fac1;
+  if (n === 0) {
+    fac1 = 1;
+  } else {
+    fac1 = fac * (n + 1);
+  }
+  if (fac1 <= val && !itog.includes(n + 1)) {
+    return factorial(n + 1, fac1, val);
+  } else {
+    if (!itog.includes(n)) {
+      possible = false;
+      itog.unshift(n);
+    }
+    return fac;
+  }
+}
+
+let rl = readline.createInterface(process.stdin, process.stdout);
+
+rl.on("line", function (line) {
+  let input = line.split(" ");
+  possible = true;
+  itog = [];
+  if (caseno > 1) {
+    res = parseInt(input);
+    if (res === 1) {
+      itog.push(1);
+    } else {
+      while (res > 0 && possible) {
+        res = factorial(0, 1, res);
+      }
+    }
+    if (!possible) {
+      console.log("Case", caseno + ":", "impossible");
+    } else {
+      console.log("Case ", caseno, ": ", [res].join("") + "!");  
+    }
+  }
+  ++caseno;
+});
