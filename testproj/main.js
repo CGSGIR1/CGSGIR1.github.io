@@ -54,7 +54,7 @@ export function initGL() {
         
         void main()
         {
-            o_color = color * Jul(tpos, vec2(0.3 + sin(Time) * 0.12, 0.4)) / 256.0 * vec4(0.5, 0, 1 , 1);
+            o_color = color * Jul(tpos, vec2(0.3 + sin(Time) * 0.12, 0.4)) / 256.0 * vec4(0.1, 1, 0.3 , 1);
         }
     `;
     const vertexSh = loadShader(gl, gl.VERTEX_SHADER, vs);
