@@ -18,7 +18,7 @@ void main() {
     vec3 V = normalize(mat3(MatrInv) * pos - CamLoc);
     vec3 N = normalize(in_normal);
     N = faceforward(N, V, N);
-    v_color = in_color;
+    //v_color = in_color;
     //v_color = vec4(in_normal, 1);
-    //v_color = vec4(in_color.rgb * max(0.1, dot(N, -normalize(CamDir))), 1);
+    v_color = vec4(in_color.rgb * max(0.2, dot(N, normalize(CamDir))), 1);
 }

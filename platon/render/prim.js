@@ -201,7 +201,7 @@ export async function PrimLoad(Pr, FileName) {
         z = parseFloat(input[3]);
         let vertex = vert();
         vertex.pos = [x, y, z];
-        vertex.color = [1, 0, 1, 1];
+        vertex.color = [0, 0.7, 0.5, 1];
         V.push(vertex);
       } else if (line[0] == "f" && line[1] == " ") {
         let x, y, z;
@@ -212,11 +212,27 @@ export async function PrimLoad(Pr, FileName) {
         I.push(x, y, z);
       }
     }
-    console.log(V);
-    console.log(I);
-    let lupa = prim(Pr.gl, Pr.type, VertToArray(V), 1, I, Pr.shader);
-    console.log(lupa);
-    return lupa;
+    for (let i = 0; i < I.length; i += 3) {
+      let p0 = vec3(V[I[i]].pos);
+      let p1 = vec3(V[I[i + 1]].pos);
+      let p2 = vec3(V[I[i + 2]].pos);
+      let N = p1.sub(p0).cross(p2.sub(p0)).normalize();
+
+      V[I[i]].normal = vec3(V[I[i]].normal).add(N).toArray();
+      //console.log(N);
+      V[I[i + 1]].normal = vec3(V[I[i + 1]].normal)
+        .add(N)
+        .toArray();
+      V[I[i + 2]].normal = vec3(V[I[i + 2]].normal)
+        .add(N)
+        .toArray();
+    }
+    for (let i = 0; i < V.length; i++) {
+      V[i].normal = vec3(V[i].normal).normalize().toArray();
+    }
+    console.log(Pr);
+    let Pr1 = prim(Pr.gl, Pr.type, VertToArray(V), V.lenght, I, Pr.shader);
+    return Pr1;
   });
   return prom;
 }

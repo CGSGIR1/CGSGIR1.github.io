@@ -187,7 +187,8 @@ class _mat4 {
   }
 
   MatrTranslate(T) {
-    let m = new _mat4().setIdentity;
+    let m = mat4();
+    let x, y, z;
     if (typeof T == "object")
       if (T.length == 3) (x = T[0]), (y = T[1]), (z = T[2]);
       else (x = T.x), (y = T.y), (z = T.z);
