@@ -28,7 +28,7 @@ export function initGL() {
         {
             gl_Position = in_pos;
             tpos = in_pos.xy;
-            color = vec4(in_pos.xy, 0.7, 1);
+            color = vec4(in_pos.xy, 0.9, 0.3);
         }
     `;
 
