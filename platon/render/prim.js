@@ -48,8 +48,9 @@ export function vert(...args) {
 
 export function arrayVert(mode, array) {
   let res = [];
+  console.log(array);
   if (mode === false) {
-    for (let i = 0; i < array.length / 7; i++) {
+    for (let i = 0; i < array.length; i += 7) {
       res.push(
         vert(
           array[i],
@@ -63,7 +64,7 @@ export function arrayVert(mode, array) {
       );
     }
   } else {
-    for (let i = 0; i < array.length / 10; i++) {
+    for (let i = 0; i < array.length; i += 10) {
       res.push(
         vert(
           array[i],
@@ -73,9 +74,9 @@ export function arrayVert(mode, array) {
           array[i + 4],
           array[i + 5],
           array[i + 6],
-          array[i + 7],
-          array[i + 8],
-          array[i + 9]
+          0,
+          0,
+          0
         )
       );
     }

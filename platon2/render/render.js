@@ -7,7 +7,6 @@ import {
   PrimLoad,
 } from "./prim.js";
 import { vec3, mat4, camera, MatrIdentity, MatrMulMatr } from "./mth/mth.js";
-export { vec3 };
 
 async function loadShaderAsync(shaderName) {
   try {
@@ -30,6 +29,81 @@ function loadShader(gl, type, source) {
     console.log(buf);
   }
   return shader;
+}
+let tetraf = false;
+let cubef = false;
+let octaf = false;
+let icosf = false;
+let dodef = false;
+
+function fun1() {
+  var chbox;
+  chbox = document.getElementById("Tetrahedron");
+  if (chbox.checked) {
+    tetraf = true;
+  } else {
+    tetraf = false;
+  }
+}
+function fun2() {
+  var chbox;
+  chbox = document.getElementById("Cube");
+  if (chbox.checked) {
+    cubef = true;
+  } else {
+    cubef = false;
+  }
+}
+function fun3() {
+  var chbox;
+  chbox = document.getElementById("Octahedron");
+  if (chbox.checked) {
+    octaf = true;
+  } else {
+    octaf = false;
+  }
+}
+function fun4() {
+  var chbox;
+  chbox = document.getElementById("Icosahedron");
+  if (chbox.checked) {
+    icosf = true;
+  } else {
+    icosf = false;
+  }
+}
+function fun5() {
+  var chbox;
+  chbox = document.getElementById("Dodecahedron");
+  if (chbox.checked) {
+    dodef = true;
+  } else {
+    dodef = false;
+  }
+}
+
+function normalas(V, Ibuf) {
+  let Vbuf = arrayVert(true, V);
+  for (let i = 0; i < Ibuf.length; i += 3) {
+    let p0 = vec3(Vbuf[Ibuf[i]].pos);
+    let p1 = vec3(Vbuf[Ibuf[i + 1]].pos);
+    let p2 = vec3(Vbuf[Ibuf[i + 2]].pos);
+    let N = p1.sub(p0).cross(p2.sub(p0)).normalize();
+    //console.log(p0, p1, p2);
+
+    Vbuf[Ibuf[i]].normal = vec3(Vbuf[Ibuf[i]].normal).add(N).toArray();
+    //console.log(N);
+    Vbuf[Ibuf[i + 1]].normal = vec3(Vbuf[Ibuf[i + 1]].normal)
+      .add(N)
+      .toArray();
+    Vbuf[Ibuf[i + 2]].normal = vec3(Vbuf[Ibuf[i + 2]].normal)
+      .add(N)
+      .toArray();
+  }
+  for (let i = 0; i < Vbuf.length; i++) {
+    Vbuf[i].normal = vec3(Vbuf[i].normal).normalize().toArray();
+  }
+  return VertToArray(Vbuf);
 }
 
 export function initGL() {
@@ -125,6 +199,11 @@ export function initGL() {
     8, 11, 17, 8, 11, 18, 10, 11, 18, 4, 10, 11, 0, 4, 11, 8, 9, 19, 8, 18, 19,
     10, 18, 19, 0, 1, 11, 1, 11, 17, 1, 12, 17, 12, 16, 17, 6, 16, 17, 6, 7, 17,
   ];
+  //dataBuf = normalas(dataBuf, ind);
+  //dataBuf1 = normalas(dataBuf1, ind1);
+  //dataBuf2 = normalas(dataBuf2, ind2);
+  dataBuf3 = normalas(dataBuf3, ind3);
+  //dataBuf0 = normalas(dataBuf0, ind0);
 
   const vs = loadShaderAsync("./render/vert.vert");
   const fs = loadShaderAsync("./render/frag.frag");
@@ -151,6 +230,7 @@ export function initGL() {
     let octa = prim(gl, gl.TRIANGLES, dataBuf1, 24, ind1, shaderProgram);
     let icos = prim(gl, gl.TRIANGLES, dataBuf2, 24, ind2, shaderProgram);
     let dode = prim(gl, gl.TRIANGLES, dataBuf3, 24, ind3, shaderProgram);
+    let pust = prim(gl, gl.POINTS, dataBuf, 24, ind, shaderProgram);
 
     const render = () => {
       //    gl.bindBuffer(gl.ARRAY_BUFFER, vBuf);
@@ -173,46 +253,57 @@ export function initGL() {
       //  mat4().setRotate(Math.sin(Date.now() / 1000.0), vec3(1, 2, 3))
       // );
 
-      primDraw(
-        cube,
-        cam1,
-        MatrMulMatr(
+      primDraw(pust, cam1, MatrIdentity());
+      if (cubef === true) {
+        primDraw(
+          cube,
+          cam1,
           MatrMulMatr(
-            mat4().MatrTranslate(vec3(-1, 1, 0.5)),
-            mat4().setRotate(Math.sin(Date.now() / 2373.0), vec3(1, 1, 1))
-          ),
-          mat4().MatrScale(vec3(0.5, 0.5, 0.5))
-        )
-      );
-      primDraw(
-        tetra,
-        cam1,
-        mat4().setRotate(Math.sin(Date.now() / 787.0), vec3(2, 4, 3))
-      );
-      primDraw(
-        octa,
-        cam1,
-        MatrMulMatr(
-          mat4().MatrTranslate(vec3(1, 2, 1)),
-          mat4().setRotate(Math.sin(Date.now() / 1123.0), vec3(2, 2, 3))
-        )
-      );
-      primDraw(
-        icos,
-        cam1,
-        MatrMulMatr(
-          mat4().MatrTranslate(vec3(1, 0.5, 4)),
-          mat4().setRotate(Math.sin(Date.now() / 1467.0), vec3(0.5, 1, 1))
-        )
-      );
-      primDraw(
-        dode,
-        cam1,
-        MatrMulMatr(
-          mat4().MatrTranslate(vec3(1, 0.5, 4)),
-          mat4().setRotate(Math.sin(Date.now() / 1783.0), vec3(0.5, 1, 0))
-        )
-      );
+            MatrMulMatr(
+              mat4().MatrTranslate(vec3(-1, 1, 0.5)),
+              mat4().setRotate(Math.sin(Date.now() / 2373.0), vec3(1, 1, 1))
+            ),
+            mat4().MatrScale(vec3(0.5, 0.5, 0.5))
+          )
+        );
+      }
+      if (tetraf === true) {
+        primDraw(
+          tetra,
+          cam1,
+          mat4().setRotate(Math.sin(Date.now() / 787.0), vec3(2, 4, 3))
+        );
+      }
+      if (octaf === true) {
+        primDraw(
+          octa,
+          cam1,
+          MatrMulMatr(
+            mat4().MatrTranslate(vec3(1, 2, 1)),
+            mat4().setRotate(Math.sin(Date.now() / 1123.0), vec3(2, 2, 3))
+          )
+        );
+      }
+      if (icosf === true) {
+        primDraw(
+          icos,
+          cam1,
+          MatrMulMatr(
+            mat4().MatrTranslate(vec3(1, 0.5, 4)),
+            mat4().setRotate(Math.sin(Date.now() / 1467.0), vec3(0.5, 1, 1))
+          )
+        );
+      }
+      if (dodef === true) {
+        primDraw(
+          dode,
+          cam1,
+          MatrMulMatr(
+            mat4().MatrTranslate(vec3(1, 0.5, 4)),
+            mat4().setRotate(Math.sin(Date.now() / 1783.0), vec3(0.5, 1, 0))
+          )
+        );
+      }
 
       window.requestAnimationFrame(render);
     };
@@ -220,3 +311,4 @@ export function initGL() {
     render();
   });
 }
+export { vec3, fun1, fun2, fun3, fun4, fun5 };

@@ -4,15 +4,54 @@
         <title>IR1</title>
     </head>
     <body>
-        <canvas id="glCanvas" width="1000px" height="1000px"></canvas>
-
-        <br>Привет<b> мир</b>
+        <fieldset>
+            <legend>Choose your figures</legend>
+            <div>
+                <input type="checkbox" id="Tetrahedron" name="interest" value="etrahedron" />
+                <label for="Tetrahedron">Tetrahedron</label>
+            </div>
+            <div>
+                <input type="checkbox" id="Cube" name="interest" value="Cube" />
+                <label for="Cube">Cube</label>
+            </div>
+            <div>
+                <input type="checkbox" id="Octahedron" name="interest" value="Octahedron" />
+                <label for="Octahedron">Octahedron</label>
+            </div>
+            <div>
+                <input type="checkbox" id="Icosahedron" name="interest" value="Icosahedron" />
+                <label for="Icosahedron">Icosahedron</label>
+            </div>
+            <div>
+                <input type="checkbox" id="Dodecahedron" name="interest" value="Dodecahedron" />
+                <label for="Dodecahedron">Dodecahedron</label>
+            </div>
+        </fieldset>
         <script type="module">
-            import { initGL } from "./render/render.js";
+            import { initGL, fun1, fun2, fun3, fun4, fun5 } from "./render/render.js";
             window.addEventListener("load", () => {
                 initGL();
             });
+            document.getElementById("Tetrahedron").addEventListener("change", () => {
+                fun1();
+            })
+            document.getElementById("Cube").addEventListener("change", () => {
+                fun2();
+            })
+            document.getElementById("Octahedron").addEventListener("change", () => {
+                fun3();
+            })
+            document.getElementById("Icosahedron").addEventListener("change", () => {
+                fun4();
+            })
+            document.getElementById("Dodecahedron").addEventListener("change", () => {
+                fun5();
+            })
         </script>
+        <canvas id="glCanvas" width="1000px" height="1000px"></canvas>
+
+        <br>Привет<b> мир:(</b>
+
         
     </body>
 </html>
